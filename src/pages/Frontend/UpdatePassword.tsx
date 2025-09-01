@@ -1,0 +1,366 @@
+// src/pages/Login.tsx
+import { colors } from '@/constants/colors';
+import IconLib from '@/utils/IconsLib';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import ButtonSignInSignup from '@/components/Frontend/ButtonSignup';
+import LoginInput from '@/components/Frontend/LoginInput';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { updatePassword, verifyResetPasswordToken } from '@/api/auth';
+
+interface Props {
+   handleForm: (form: string) => void;
+}
+
+interface ApiError {
+   response?: {
+      data?: {
+         message?: string;
+         errors?: string[];
+         err?: string;
+      };
+   };
+}
+
+const UpdatePassword = ({ handleForm }: Props) => {
+   const [searchParams] = useSearchParams();
+   const userId = searchParams.get('userId') || '';
+   const token = searchParams.get('token') || '';
+
+   // http://localhost:3000/update-password?token=36aa70f683b44cd8d4e3b386163286408e275c76d7a67793841afad85595745a82160d8c&userId=68b437fff70ee2a44193258b
+   // console.log(`----->`, token, userId);
+
+   const [values, setValues] = useState({
+      newPassword:
+         import.meta.env.MODE === 'development' ||
+         import.meta.env.MODE === 'development'
+            ? 'Ere4u1lx1yc$'
+            : '',
+      confirmPassword:
+         import.meta.env.MODE === 'development' ? 'Ere4u1lx1yc$' : '',
+   });
+   const [isLoading, setIsLoading] = useState(false);
+   // Local UI state
+   const [success, setSuccess] = useState(false);
+   const navigate = useNavigate();
+   // If missing params, bounce home
+   useEffect(() => {
+      if (!token || !userId) {
+         navigate('/', { replace: true });
+      }
+   }, [token, userId, navigate]);
+
+   // Verify reset password token on mount using react-query
+   type VerifyResponse = { status: number; data: { valid: boolean } };
+
+   const verifyQuery = useQuery<VerifyResponse>({
+      queryKey: ['verify-pass-reset-token', token, userId],
+      queryFn: () => verifyResetPasswordToken({ token, userId }),
+      enabled: !!token && !!userId,
+      retry: false,
+   });
+
+   // Redirect if invalid or request errored
+   useEffect(() => {
+      // console.log(`---->>>>>>`, verifyQuery);
+      if (verifyQuery.isLoading) return;
+      const isValid = verifyQuery.data?.data?.valid;
+      if (verifyQuery.isError || isValid === false) {
+         // console.log(`---valid false or error`);
+         navigate('/', { replace: true });
+      }
+   }, [verifyQuery.isLoading, verifyQuery.isError, verifyQuery.data, navigate]);
+
+   const handleSubmit = async () => {
+      if (!values.newPassword || !values.confirmPassword) {
+         toast.error('New password and confirm password are required');
+         return;
+      }
+
+      if (values.newPassword !== values.confirmPassword) {
+         toast.error('New password and confirm password do not match');
+         return;
+      }
+
+      setIsLoading(true);
+
+      const token: string =
+         new URLSearchParams(window.location.search).get('token') || '';
+      const userId: string =
+         new URLSearchParams(window.location.search).get('userId') || '';
+
+      try {
+         const { status } = await updatePassword({
+            token,
+            userId,
+            password: values.newPassword,
+         });
+
+         console.log(`status`, status);
+
+         if (status === 200) {
+            setSuccess(true);
+            toast.success('Password updated successfully');
+         }
+      } catch (err: unknown) {
+         const error = err as ApiError;
+         const errorMessage =
+            error.response?.data?.errors?.[0] ||
+            error.response?.data?.message ||
+            'Failed to update password';
+         toast.error(errorMessage);
+         // setError(errorMessage);
+      } finally {
+         setIsLoading(false);
+      }
+   };
+
+   return (
+      <>
+         <ToastContainer />
+         <Wrapper>
+            <Top>
+               <Logo>FlyFF CMS</Logo>
+               <Nav>
+                  <NavItem>Sign In</NavItem>
+               </Nav>
+            </Top>
+            <div className="container">
+               <Content>
+                  <Heading>Come in, FlyFF CMS is free.</Heading>
+                  {verifyQuery.isLoading ? (
+                     <LoginBox>
+                        <Title>Verifying link…</Title>
+                        <Desc>
+                           Please wait while we verify your reset link.
+                        </Desc>
+                     </LoginBox>
+                  ) : success ? (
+                     <LoginBox>
+                        <IconWrapper>
+                           <IconLib
+                              icon="checkbox-circle-fill"
+                              size="54px"
+                              color={colors.GREEN}
+                           />
+                        </IconWrapper>
+                        <Title $center={success}>
+                           Password updated successfully
+                        </Title>
+                        <Desc $center={success}>
+                           You can now login with your new password
+                        </Desc>
+
+                        <div onClick={() => navigate('/')}>
+                           <ButtonSignInSignup
+                              title="Back to Login"
+                              isLoading={isLoading}
+                              color={colors.GREEN}
+                           />
+                        </div>
+                     </LoginBox>
+                  ) : (
+                     <LoginBox>
+                        <Title>Update password?</Title>
+                        <Desc>
+                           Enter your new password below to reset your FlyFF CMS
+                           account password.
+                        </Desc>
+
+                        <LoginActionContent>
+                           <LoginInput
+                              title="New Password"
+                              subtitle=""
+                              type="password"
+                              hasIcon={true}
+                              icon={
+                                 !values.newPassword
+                                    ? 'error-warning-fill'
+                                    : values.newPassword !==
+                                      values.confirmPassword
+                                    ? 'error-warning-fill'
+                                    : undefined
+                              }
+                              value={values.newPassword}
+                              name="newPassword"
+                              onChange={(e) =>
+                                 setValues({
+                                    ...values,
+                                    newPassword: e.target.value,
+                                 })
+                              }
+                           />
+                           <LoginInput
+                              title="Confirm Password"
+                              subtitle=""
+                              type="password"
+                              hasIcon={true}
+                              icon={
+                                 !values.confirmPassword
+                                    ? 'error-warning-fill'
+                                    : values.newPassword !==
+                                      values.confirmPassword
+                                    ? 'error-warning-fill'
+                                    : undefined
+                              }
+                              value={values.confirmPassword}
+                              name="confirmPassword"
+                              onChange={(e) =>
+                                 setValues({
+                                    ...values,
+                                    confirmPassword: e.target.value,
+                                 })
+                              }
+                           />
+                        </LoginActionContent>
+
+                        <div onClick={handleSubmit}>
+                           <ButtonSignInSignup
+                              title="Update Password"
+                              isLoading={isLoading}
+                              color={colors.PRIMARY}
+                           />
+                        </div>
+
+                        <NewHereWrapper>
+                           <NewHereLabel>Remember your password?</NewHereLabel>
+                           <NewHereLink onClick={() => handleForm('signin')}>
+                              Back to Login
+                           </NewHereLink>
+                        </NewHereWrapper>
+
+                        <PolicyWrapper>
+                           <PolicyDescription>
+                              By continuing, you confirm you are 18 or over and
+                              agree to our{' '}
+                              <PolicyLink href="#">Privacy Policy</PolicyLink>{' '}
+                              and{' '}
+                              <PolicyLink href="#">Terms of Use.</PolicyLink>
+                           </PolicyDescription>
+                        </PolicyWrapper>
+                     </LoginBox>
+                  )}
+               </Content>
+            </div>
+         </Wrapper>
+      </>
+   );
+};
+
+// Styled Components (unchanged except for ErrorMessage)
+const Wrapper = styled.div`
+   height: 100vh;
+   background-image: url('https://assets.elements.envato.com/apps/storefront/background_signup-adf1617844902cb55792.avif');
+   background-attachment: fixed;
+   background-blend-mode: multiply;
+   background-position: 80% 0;
+   background-size: cover;
+`;
+
+const Top = styled.div`
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   background: ${colors.GRAY1};
+   padding: 5px 1rem;
+`;
+
+const Logo = styled.h1`
+   font-weight: 700;
+   color: white;
+`;
+
+const Nav = styled.nav``;
+
+const NavItem = styled.a`
+   color: white;
+`;
+
+const Content = styled.div`
+   padding: 5rem 1rem;
+   display: grid;
+   place-items: center;
+   grid-template-columns: 1fr auto;
+`;
+
+const Heading = styled.h1`
+   font-size: 60px;
+   font-weight: 700;
+   color: white;
+`;
+
+const LoginBox = styled.div`
+   padding: 1.5rem;
+   width: 450px;
+   border-radius: 5px;
+   background-color: white;
+`;
+
+const Title = styled.h2<{ $center?: boolean }>`
+   font-size: 28px;
+   font-weight: 700;
+   text-align: ${({ $center }) => ($center ? 'center' : 'left')};
+   color: ${({ $center }) => ($center ? colors.GREEN : colors.DARK)};
+`;
+const Desc = styled.p<{ $center?: boolean }>`
+   margin-top: 12px;
+   font-size: 16px;
+   color: ${colors.GRAY2};
+   margin-bottom: 1rem;
+   text-align: ${({ $center }) => ($center ? 'center' : 'left')};
+`;
+const LoginActionContent = styled.div`
+   margin-bottom: 2rem;
+`;
+
+const NewHereWrapper = styled.div`
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 5px;
+   margin-top: 2rem;
+`;
+
+const NewHereLabel = styled.p`
+   font-size: 16px;
+   color: ${colors.GRAY2};
+`;
+
+const NewHereLink = styled.p`
+   font-size: 16px;
+   color: ${colors.GRAY2};
+   font-weight: 700;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   &:hover {
+      color: ${colors.PRIMARY70};
+      text-decoration: underline;
+   }
+`;
+
+const PolicyWrapper = styled.div`
+   border-top: 1px solid ${colors.GRAY4};
+   padding-top: 1.5rem;
+   margin-top: 2rem;
+`;
+
+const PolicyDescription = styled.p`
+   font-size: 14px;
+   color: ${colors.GRAY2};
+`;
+
+const PolicyLink = styled.a`
+   color: ${colors.GRAY2};
+   text-decoration: underline;
+`;
+
+const IconWrapper = styled.div`
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-bottom: 1rem;
+`;
+
+export default UpdatePassword;

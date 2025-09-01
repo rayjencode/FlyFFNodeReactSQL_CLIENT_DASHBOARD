@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "dsznajder.es7-react-js-snippets",
+    "christian-kohler.npm-intellisense",
+    "mikestead.dotenv",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "rangav.vscode-thunder-client",
+    "ms-mssql.mssql"
+  ],
+  "unwantedRecommendations": []
+}
