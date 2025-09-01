@@ -51,12 +51,18 @@ const LoadingIcon = styled.div`
 `;
 
 const Wrapper = styled.div<WrapperProps>`
-   background: ${(props) => (props.$isLoading ? colors.GRAY3 : props.$color)};
-   padding: 12px;
-   border-radius: 4px;
+   background: ${(props) => (props.$isLoading ? colors.GRAY3 : props.$color || colors.PRIMARY)};
+   padding: 12px 24px;
+   border-radius: 0;
    cursor: ${(props) => (props.$isLoading ? 'not-allowed' : 'pointer')};
    opacity: ${(props) => (props.$isLoading ? 0.8 : 1)};
-   transition: all 0.2s ease;
+   transition: all 0.3s ease-in-out;
+   clip-path: polygon(90% 0, 100% 50%, 90% 100%, 0% 100%, 10% 50%, 0% 0%);
+
+   &:hover {
+      background: ${colors.PRIMARY70};
+      transform: scale(1.05);
+   }
 `;
 const Title = styled.p`
    font-weight: 600;

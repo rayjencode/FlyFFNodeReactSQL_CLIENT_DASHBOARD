@@ -86,24 +86,28 @@ const LoginInput = ({
 };
 
 const Wrapper = styled.div`
-   margin-top: 1rem;
+   margin-top: 1.5rem;
 `;
 
 const Top = styled.div`
    display: flex;
    justify-content: space-between;
    align-items: center;
+   margin-bottom: 8px;
 `;
 
 const InputLabel = styled.p`
    font-weight: 600;
    font-size: 15px;
+   color: ${colors.GRAY10};
 `;
 
 const SubLabel = styled.p`
    font-size: 15px;
    cursor: pointer;
    text-decoration: underline;
+   color: ${colors.PRIMARY};
+   font-weight: 600;
 `;
 
 const FormWrapper = styled.div`
@@ -113,14 +117,20 @@ const FormWrapper = styled.div`
 const FormContent = styled.div`
    display: flex;
    align-items: center;
-   gap: 5px;
-   border: 1px solid ${colors.GRAY4};
+   gap: 10px;
+   border: 2px solid ${colors.MAIN_DARK90};
    border-radius: 4px;
-   padding: 9px 10px;
+   padding: 12px 14px;
+   background-color: rgba(29, 29, 31, 0.8);
+   transition: border-color 0.3s ease-in-out;
+
+   &:focus-within {
+      border-color: ${colors.PRIMARY};
+   }
 `;
 
 const ValidationMsg = styled.p`
-   margin-top: 5px;
+   margin-top: 6px;
    color: ${colors.DANGER};
    font-size: 14px;
    font-weight: 500;
@@ -131,8 +141,13 @@ const Input = styled.input`
    outline: none;
    border: none;
    font-weight: 600;
-   font-size: 14px;
-   color: ${colors.GRAY1};
+   font-size: 16px;
+   color: ${colors.WHITE};
+   background-color: transparent;
+
+   &::placeholder {
+      color: ${colors.GRAY5};
+   }
 `;
 
 export default LoginInput;

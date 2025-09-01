@@ -64,14 +64,21 @@ const ForgotPassword = ({ handleForm }: Props) => {
    return (
       <Wrapper>
          <Top>
-            <Logo>FlyFF CMS</Logo>
-            <Nav>
-               <NavItem>Sign In</NavItem>
-            </Nav>
+            <div></div>
+            <Logo>
+               <LogoIcon src="logo.png" alt="FlyFF CMS" />
+            </Logo>
+            <Nav>{/* <NavItem>Sign In</NavItem> */}</Nav>
          </Top>
          <div className="container">
             <Content>
-               <Heading>Come in, FlyFF CMS is free.</Heading>
+               {/* <Heading>Come in, FlyFF CMS is free.</Heading> */}
+               <ImageFloatingWrapper>
+                  <ImgFloating
+                     src="https://res.cloudinary.com/rayjenscode/image/upload/v1756721703/jabcabiexzhz8k3ynw8w.png"
+                     alt="FlyFF CMS"
+                  />
+               </ImageFloatingWrapper>
                <LoginBox>
                   <Title>Forgot password?</Title>
                   <Desc>
@@ -127,19 +134,44 @@ const ForgotPassword = ({ handleForm }: Props) => {
 
 // Styled Components (unchanged except for ErrorMessage)
 const Wrapper = styled.div`
-   height: 100vh;
-   background-image: url('https://assets.elements.envato.com/apps/storefront/background_signup-adf1617844902cb55792.avif');
+   position: relative;
+   min-height: 100vh;
+   background-image: url('https://res.cloudinary.com/rayjenscode/image/upload/v1756715735/lbbga7tk7uvisyllffzs.jpg');
    background-attachment: fixed;
    background-blend-mode: multiply;
    background-position: 80% 0;
    background-size: cover;
+
+   /* overlay */
+   &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* black with 50% opacity */
+      z-index: 1;
+   }
+
+   /* make sure inner content stays above overlay */
+   > * {
+      position: relative;
+      z-index: 2;
+   }
+
+   @media (max-width: 1024px) {
+      height: auto;
+      background-attachment: scroll;
+      background-position: center;
+   }
 `;
 
 const Top = styled.div`
    display: flex;
    justify-content: space-between;
    align-items: center;
-   background: ${colors.GRAY1};
+   /* background: ${colors.GRAY1}; */
    padding: 5px 1rem;
 `;
 
@@ -148,41 +180,131 @@ const Logo = styled.h1`
    color: white;
 `;
 
+const LogoIcon = styled.img`
+   width: 100px;
+
+   @media (max-width: 480px) {
+      min-width: 30px;
+   }
+`;
+
 const Nav = styled.nav``;
 
 const NavItem = styled.a`
    color: white;
 `;
-
 const Content = styled.div`
    padding: 5rem 1rem;
    display: grid;
    place-items: center;
    grid-template-columns: 1fr auto;
+
+   @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 3rem 1rem;
+      overflow-y: auto;
+   }
+
+   @media (max-width: 768px) {
+      padding: 2rem 1rem;
+      gap: 1.5rem;
+   }
+
+   @media (max-width: 480px) {
+      padding: 1.5rem 0.75rem;
+      gap: 1rem;
+   }
+`;
+
+const ImageFloatingWrapper = styled.div`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   /* background-color: rgba(255, 255, 255, 0.1); */
+   padding: 1rem;
+   border-radius: 10px;
+   animation: float 6s ease-in-out infinite;
+
+   @keyframes float {
+      0%,
+      100% {
+         transform: translateY(0);
+      }
+      50% {
+         transform: translateY(-20px);
+      }
+   }
+
+   @media (max-width: 1024px) {
+      order: -1;
+   }
+
+   @media (max-width: 480px) {
+      padding: 0.5rem;
+   }
+`;
+
+const ImgFloating = styled.img`
+   width: 400px;
+   max-width: 100%;
+
+   @media (max-width: 768px) {
+      width: 300px;
+   }
+
+   @media (max-width: 480px) {
+      width: 200px;
+   }
 `;
 
 const Heading = styled.h1`
-   font-size: 60px;
+   font-size: 40px;
    font-weight: 700;
    color: white;
 `;
 
 const LoginBox = styled.div`
-   padding: 1.5rem;
+   padding: 2rem;
    width: 450px;
-   border-radius: 5px;
-   background-color: white;
+   border-radius: 0;
+   background-color: rgba(29, 29, 31, 0.8);
+   border: 2px solid ${colors.PRIMARY};
+   box-shadow: 0 0 25px rgba(55, 96, 249, 0.6);
+
+   @media (max-width: 768px) {
+      width: 100%;
+      max-width: 450px;
+      padding: 1.5rem;
+      /* max-height: 80vh;
+      overflow-y: auto; */
+   }
+
+   @media (max-width: 480px) {
+      padding: 1.25rem;
+      border-width: 1px;
+   }
 `;
 
 const Title = styled.h2`
-   font-size: 28px;
+   font-size: 32px;
    font-weight: 700;
-   /* text-align: center; */
+   color: ${colors.WHITE};
+   text-transform: uppercase;
+   letter-spacing: 2px;
+
+   @media (max-width: 768px) {
+      font-size: 28px;
+   }
+
+   @media (max-width: 480px) {
+      font-size: 24px;
+   }
 `;
 const Desc = styled.p`
    margin-top: 12px;
    font-size: 16px;
-   color: ${colors.GRAY2};
+   color: ${colors.GRAY10};
 `;
 const CheckList = styled.ul`
    margin-top: 2rem;
@@ -243,7 +365,7 @@ const NewHereLabel = styled.p`
 
 const NewHereLink = styled.p`
    font-size: 16px;
-   color: ${colors.GRAY2};
+   color: ${colors.PRIMARY};
    font-weight: 700;
    cursor: pointer;
    transition: all 0.3s ease;
@@ -265,7 +387,7 @@ const PolicyDescription = styled.p`
 `;
 
 const PolicyLink = styled.a`
-   color: ${colors.GRAY2};
+   color: ${colors.PRIMARY};
    text-decoration: underline;
 `;
 

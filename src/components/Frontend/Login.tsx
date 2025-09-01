@@ -104,12 +104,21 @@ const Login = ({ handleForm }: Props) => {
    return (
       <Wrapper>
          <Top>
-            <Logo>FlyFF CMS</Logo>
+            <div></div>
+            <Logo>
+               <LogoIcon src="logo.png" alt="FlyFF CMS" />
+            </Logo>
             <Nav>{/* <NavItem>Sign In</NavItem> */}</Nav>
          </Top>
          <div className="container">
             <Content>
-               <Heading>Come in, FlyFF CMS is free.</Heading>
+               {/* <Heading>Come in, FlyFF CMS is free.</Heading> */}
+               <ImageFloatingWrapper>
+                  <ImgFloating
+                     src="https://res.cloudinary.com/rayjenscode/image/upload/v1756721703/jabcabiexzhz8k3ynw8w.png"
+                     alt="FlyFF CMS"
+                  />
+               </ImageFloatingWrapper>
                <LoginBox>
                   <Title>Hi! Welcome back.</Title>
 
@@ -131,7 +140,7 @@ const Login = ({ handleForm }: Props) => {
                            color={colors.GRAY1}
                         />
                         <CheckLabel>
-                           Zero configuration, just link your IP and go live.
+                           Zero installation, just link your IP and go live.
                         </CheckLabel>
                      </CheckItem>
                   </CheckList>
@@ -207,41 +216,48 @@ const Login = ({ handleForm }: Props) => {
 
 // Styled Components (unchanged except for ErrorMessage)
 const Wrapper = styled.div`
-   height: 100vh;
-   /* background-image: url('https://assets.elements.envato.com/apps/storefront/background_signup-adf1617844902cb55792.avif');
+   position: relative;
+   min-height: 100vh;
+   background-image: url('https://res.cloudinary.com/rayjenscode/image/upload/v1756715735/lbbga7tk7uvisyllffzs.jpg');
    background-attachment: fixed;
    background-blend-mode: multiply;
    background-position: 80% 0;
-   background-size: cover; */
+   background-size: cover;
 
-   min-height: 100vh;
-   background: radial-gradient(
-         60rem 60rem at 70% 35%,
-         rgba(255, 255, 255, 0.06) 0%,
-         transparent 60%
-      ),
-      radial-gradient(
-         38rem 38rem at 30% 75%,
-         rgba(255, 60, 160, 0.1) 0%,
-         transparent 60%
-      ),
-      linear-gradient(
-         115deg,
-         #ff2e72 0%,
-         #a12bdc 22%,
-         #5b2bd9 38%,
-         #2a31d5 52%,
-         #0d6bdd 72%,
-         #09a8c5 86%,
-         #35d178 100%
-      );
-   background-attachment: fixed;
-   /* color: #fff; */
+   /* overlay */
+   &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* black with 50% opacity */
+      z-index: 1;
+   }
 
-   @media (max-width: 768px) {
+   /* make sure inner content stays above overlay */
+   > * {
+      position: relative;
+      z-index: 2;
+   }
+
+   @media (max-width: 1024px) {
+      height: auto;
       background-attachment: scroll;
       background-position: center;
    }
+`;
+
+const Overlay = styled.div`
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100vh;
+   background-color: rgba(0, 0, 0, 0.5);
+   z-index: 1;
+   /* pointer-events: none; */
 `;
 
 const Top = styled.div`
@@ -265,6 +281,14 @@ const Logo = styled.h1`
    }
 `;
 
+const LogoIcon = styled.img`
+   width: 100px;
+
+   @media (max-width: 480px) {
+      min-width: 30px;
+   }
+`;
+
 const Nav = styled.nav``;
 
 const NavItem = styled.a`
@@ -285,6 +309,7 @@ const Content = styled.div`
       grid-template-columns: 1fr;
       gap: 2rem;
       padding: 3rem 1rem;
+      overflow-y: auto;
    }
 
    @media (max-width: 768px) {
@@ -298,8 +323,49 @@ const Content = styled.div`
    }
 `;
 
+const ImageFloatingWrapper = styled.div`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   /* background-color: rgba(255, 255, 255, 0.1); */
+   padding: 1rem;
+   border-radius: 10px;
+   animation: float 6s ease-in-out infinite;
+
+   @keyframes float {
+      0%,
+      100% {
+         transform: translateY(0);
+      }
+      50% {
+         transform: translateY(-20px);
+      }
+   }
+
+   @media (max-width: 1024px) {
+      order: -1;
+   }
+
+   @media (max-width: 480px) {
+      padding: 0.5rem;
+   }
+`;
+
+const ImgFloating = styled.img`
+   width: 400px;
+   max-width: 100%;
+
+   @media (max-width: 768px) {
+      width: 300px;
+   }
+
+   @media (max-width: 480px) {
+      width: 200px;
+   }
+`;
+
 const Heading = styled.h1`
-   font-size: 60px;
+   font-size: 40px;
    font-weight: 700;
    color: white;
 
@@ -319,64 +385,71 @@ const Heading = styled.h1`
 `;
 
 const LoginBox = styled.div`
-   padding: 1.5rem;
+   padding: 2rem;
    width: 450px;
-   border-radius: 5px;
-   background-color: white;
+   border-radius: 0;
+   background-color: rgba(29, 29, 31, 0.8);
+   border: 2px solid ${colors.PRIMARY};
+   box-shadow: 0 0 25px rgba(55, 96, 249, 0.6);
 
    @media (max-width: 768px) {
       width: 100%;
       max-width: 450px;
-      padding: 1.25rem;
+      padding: 1.5rem;
+      /* max-height: 80vh; */
+      /* overflow-y: auto; */
    }
 
    @media (max-width: 480px) {
-      padding: 1rem;
-      border-radius: 8px;
+      padding: 1.25rem;
+      border-width: 1px;
    }
 `;
 
 const Title = styled.h2`
-   font-size: 28px;
+   font-size: 32px;
    font-weight: 700;
    text-align: center;
+   color: ${colors.WHITE};
+   text-transform: uppercase;
+   letter-spacing: 2px;
 
    @media (max-width: 768px) {
-      font-size: 24px;
+      font-size: 28px;
    }
 
    @media (max-width: 480px) {
-      font-size: 20px;
+      font-size: 24px;
    }
 `;
 
 const CheckList = styled.ul`
-   margin-top: 2rem;
+   margin-top: 2.5rem;
 
    @media (max-width: 768px) {
-      margin-top: 1.5rem;
+      margin-top: 2rem;
    }
 
    @media (max-width: 480px) {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
    }
 `;
 
 const CheckItem = styled.li`
    display: flex;
    align-items: center;
-   gap: 8px;
-   margin-bottom: 5px;
+   gap: 10px;
+   margin-bottom: 8px;
 
    @media (max-width: 480px) {
-      gap: 6px;
-      margin-bottom: 4px;
+      gap: 8px;
+      margin-bottom: 6px;
    }
 `;
 
 const CheckLabel = styled.label`
    font-size: 16px;
-   color: ${colors.GRAY2};
+   color: ${colors.GRAY10};
 
    @media (max-width: 768px) {
       font-size: 14px;
@@ -389,10 +462,10 @@ const CheckLabel = styled.label`
 `;
 
 const BtnActionWrapper = styled.div`
-   margin-top: 2rem;
+   margin-top: 2.5rem;
 
    @media (max-width: 768px) {
-      margin-top: 1.5rem;
+      margin-top: 2rem;
    }
 `;
 
@@ -400,19 +473,20 @@ const OrWrapper = styled.div`
    display: grid;
    grid-template-columns: 1fr auto 1fr;
    align-items: center;
-   gap: 10px;
-   margin-top: 2rem;
-   margin-bottom: 1rem;
+   gap: 12px;
+   margin-top: 2.5rem;
+   margin-bottom: 1.5rem;
 
    @media (max-width: 768px) {
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
    }
 `;
 
 const Or = styled.p`
    text-align: center;
-   color: ${colors.GRAY1};
+   color: ${colors.GRAY5};
+   font-weight: 600;
 
    @media (max-width: 480px) {
       font-size: 14px;
@@ -421,19 +495,19 @@ const Or = styled.p`
 
 const OrLine = styled.div`
    width: 100%;
-   background-color: ${colors.GRAY4};
-   height: 1px;
+   background-color: ${colors.GRAY_DARK};
+   height: 2px;
 `;
 
 const LoginActionContent = styled.div`
-   margin-bottom: 2rem;
+   margin-bottom: 2.5rem;
 
    @media (max-width: 768px) {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
    }
 
    @media (max-width: 480px) {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
    }
 `;
 
@@ -441,24 +515,24 @@ const NewHereWrapper = styled.div`
    display: flex;
    align-items: center;
    justify-content: center;
-   gap: 5px;
-   margin-top: 2rem;
+   gap: 6px;
+   margin-top: 2.5rem;
 
    @media (max-width: 768px) {
-      margin-top: 1.5rem;
+      margin-top: 2rem;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
    }
 
    @media (max-width: 480px) {
-      margin-top: 1rem;
-      gap: 6px;
+      margin-top: 1.5rem;
+      gap: 8px;
    }
 `;
 
 const NewHereLabel = styled.p`
    font-size: 16px;
-   color: ${colors.GRAY2};
+   color: ${colors.GRAY5};
 
    @media (max-width: 768px) {
       font-size: 14px;
@@ -471,7 +545,7 @@ const NewHereLabel = styled.p`
 
 const NewHereLink = styled.p`
    font-size: 16px;
-   color: ${colors.GRAY2};
+   color: ${colors.PRIMARY};
    font-weight: 700;
    cursor: pointer;
    transition: all 0.3s ease;
@@ -490,25 +564,25 @@ const NewHereLink = styled.p`
 `;
 
 const PolicyWrapper = styled.div`
-   border-top: 1px solid ${colors.GRAY4};
+   border-top: 2px solid ${colors.GRAY_DARK};
    padding-top: 1.5rem;
-   margin-top: 2rem;
+   margin-top: 2.5rem;
 
    @media (max-width: 768px) {
       padding-top: 1.25rem;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
    }
 
    @media (max-width: 480px) {
       padding-top: 1rem;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
    }
 `;
 
 const PolicyDescription = styled.p`
    font-size: 14px;
-   color: ${colors.GRAY2};
-   line-height: 1.5;
+   color: ${colors.GRAY5};
+   line-height: 1.6;
 
    @media (max-width: 768px) {
       font-size: 13px;
@@ -517,13 +591,14 @@ const PolicyDescription = styled.p`
 
    @media (max-width: 480px) {
       font-size: 12px;
-      line-height: 1.4;
+      line-height: 1.5;
    }
 `;
 
 const PolicyLink = styled.a`
-   color: ${colors.GRAY2};
+   color: ${colors.PRIMARY};
    text-decoration: underline;
+   font-weight: 600;
 
    @media (max-width: 480px) {
       font-size: 12px;
