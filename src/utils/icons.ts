@@ -38,6 +38,10 @@ import {
    RiBankFill,
    RiEyeLine,
    RiMenuLine,
+   RiGlobalLine,
+   RiAddCircleFill,
+   RiAddCircleLine,
+   RiSettingsLine,
 } from '@remixicon/react';
 
 // Create a map of available icons
@@ -82,6 +86,10 @@ export const ICONS_MAP = {
    'bank-fill': RiBankFill,
    'eye-line': RiEyeLine,
    'menu-line': RiMenuLine,
+   'global-line': RiGlobalLine,
+   'add-circle-fill': RiAddCircleFill,
+   'add-circle-line': RiAddCircleLine,
+   'settings-line': RiSettingsLine,
    loader: RiLoader4Line,
 } as const; // `as const` ensures TypeScript treats these keys as literals
 

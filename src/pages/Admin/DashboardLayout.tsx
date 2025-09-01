@@ -25,6 +25,8 @@ import type { DropdownActionType } from '@/types/shared';
 import useSaveChangesStore from '@/store/useSaveChangesStore';
 import PromptWrapper from '@/components/Admin/Templates/PromptWrapper';
 import SaveChangesModal from '@/components/Admin/SaveChangesModal';
+import ServersCard from '@/components/Admin/ServersCard';
+// import ServersCard from '@/components/Admin/ServersCard';
 type Props = {
    active: string;
    children: React.ReactNode;
@@ -129,17 +131,9 @@ const DashboardLayout = ({ active, children }: Props) => {
                         )}
                      </ProfileWrapper>
                   </TopHeader>
-                  <ServerList>
-                     <ServerItem>
-                        <p>FlyFF Universe</p>
-                     </ServerItem>
-                     <ServerItem>
-                        <p>FlyFF Nebula</p>
-                     </ServerItem>
-                     <ServerItem>
-                        <p>Create a Server +</p>
-                     </ServerItem>
-                  </ServerList>
+                  <SelectServerMain>
+                     <ServersCard />
+                  </SelectServerMain>
                </SelectServerContent>
             ) : (
                <Content>
@@ -244,10 +238,20 @@ const ProfileInitial = styled.div`
 // ServerList
 // ServerItem
 
-const SelectServerContent = styled.div``;
+const SelectServerContent = styled.div`
+   /* padding: 1rem; */
+`;
 
-const ServerList = styled.div``;
+const SelectServerMain = styled.div`
+   padding: 1rem;
+   /* display: grid;
+   place-items: center; */
 
-const ServerItem = styled.div``;
+   max-width: 700px;
+   margin-left: auto;
+   margin-right: auto;
+   /* width: 100%;
+   height: 100%; */
+`;
 
 export default DashboardLayout;

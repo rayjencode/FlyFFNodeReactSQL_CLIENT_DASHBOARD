@@ -137,7 +137,7 @@ const ButtonNormal = styled.button<{
          ? '10px 1rem'
          : '15px 2rem'};
    border-radius: 4px;
-   width: 150px;
+   width: auto;
    &:hover {
       opacity: 0.9;
    }
