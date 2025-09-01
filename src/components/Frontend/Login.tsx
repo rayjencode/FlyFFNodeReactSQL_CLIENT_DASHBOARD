@@ -208,11 +208,35 @@ const Login = ({ handleForm }: Props) => {
 // Styled Components (unchanged except for ErrorMessage)
 const Wrapper = styled.div`
    height: 100vh;
-   background-image: url('https://assets.elements.envato.com/apps/storefront/background_signup-adf1617844902cb55792.avif');
+   /* background-image: url('https://assets.elements.envato.com/apps/storefront/background_signup-adf1617844902cb55792.avif');
    background-attachment: fixed;
    background-blend-mode: multiply;
    background-position: 80% 0;
-   background-size: cover;
+   background-size: cover; */
+
+   min-height: 100vh;
+   background: radial-gradient(
+         60rem 60rem at 70% 35%,
+         rgba(255, 255, 255, 0.06) 0%,
+         transparent 60%
+      ),
+      radial-gradient(
+         38rem 38rem at 30% 75%,
+         rgba(255, 60, 160, 0.1) 0%,
+         transparent 60%
+      ),
+      linear-gradient(
+         115deg,
+         #ff2e72 0%,
+         #a12bdc 22%,
+         #5b2bd9 38%,
+         #2a31d5 52%,
+         #0d6bdd 72%,
+         #09a8c5 86%,
+         #35d178 100%
+      );
+   background-attachment: fixed;
+   /* color: #fff; */
 
    @media (max-width: 768px) {
       background-attachment: scroll;
@@ -224,7 +248,7 @@ const Top = styled.div`
    display: flex;
    justify-content: space-between;
    align-items: center;
-   background: ${colors.GRAY1};
+   /* background: ${colors.GRAY1}; */
    padding: 5px 1rem;
 
    @media (max-width: 480px) {

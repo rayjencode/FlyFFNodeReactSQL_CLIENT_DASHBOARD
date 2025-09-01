@@ -123,12 +123,12 @@ const VerifyEmail = ({ handleForm }: Props) => {
    return (
       <Wrapper>
          <Top>
-            <Logo>SmartFi</Logo>
+            <Logo>FlyFF CMS</Logo>
             <Nav>{/* <NavItem>Sign In</NavItem> */}</Nav>
          </Top>
          <div className="container">
             <Content>
-               <Heading>Come in, SmartFi is free.</Heading>
+               <Heading>Come in, FlyFF CMS is free.</Heading>
                <LoginBox>
                   <Title>Verify your email</Title>
 

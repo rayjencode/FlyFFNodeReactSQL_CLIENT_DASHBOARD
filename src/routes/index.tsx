@@ -2,6 +2,7 @@ import PrivateRoute from '@/components/PrivateRoute';
 import PublicRoute from '@/components/PublicRoute';
 import DashboardLayout from '@/pages/Admin/DashboardLayout';
 import Home from '@/pages/Admin/Home';
+import Players from '@/pages/Admin/Players';
 import Layout from '@/pages/Frontend/Layout';
 import UpdatePassword from '@/pages/Frontend/UpdatePassword';
 import NotFound from '@/pages/NotFound';
@@ -63,6 +64,15 @@ const RoutesIndex: React.FC = () => {
                path="/admin"
                element={
                   <DashboardLayout active={currentRoute} children={<Home />} />
+               }
+            />
+            <Route
+               path="/players"
+               element={
+                  <DashboardLayout
+                     active={currentRoute}
+                     children={<Players />}
+                  />
                }
             />
          </Route>

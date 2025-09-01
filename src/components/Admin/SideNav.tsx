@@ -30,6 +30,12 @@ const SideNav = ({ active }: Props) => {
          icon: 'home-5-fill',
          link: '/admin',
       },
+      {
+         id: 'players',
+         name: 'Players',
+         icon: 'home-5-fill',
+         link: '/players',
+      },
    ];
 
    const handleSelected = (id: string) => {
@@ -220,6 +226,11 @@ const LogoWrapper = styled.div`
    cursor: pointer;
    margin-bottom: 1rem;
 
+   width: 100px;
+   height: 45px;
+   margin-right: auto;
+   margin-left: auto;
+
    @media (max-width: 768px) {
       /* margin-bottom: 0.75rem; */
       /* text-align: center; */
@@ -231,7 +242,7 @@ const LogoWrapper = styled.div`
 `;
 
 const Logo = styled.img`
-   width: 130px;
+   width: 100px;
 
    @media (max-width: 768px) {
       /* width: 100px; */

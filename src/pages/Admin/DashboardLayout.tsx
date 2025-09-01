@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // import { Post } from '@/types/post';
 import styled from 'styled-components';
@@ -48,6 +48,8 @@ const DashboardLayout = ({ active, children }: Props) => {
    const { showSave, handleShowSave, handleCloseSave, handleSave } =
       useSaveChangesStore();
 
+   const [server, setServer] = useState('select');
+
    const handleClickOutside = (
       e: React.MouseEvent<HTMLDivElement, MouseEvent>
    ) => {
@@ -96,9 +98,9 @@ const DashboardLayout = ({ active, children }: Props) => {
                actions={actions}
             />
             <SaveChangesModal show={showSave} />
-            <Content>
-               <SideNav active={active} />
-               <Main>
+
+            {server === 'select' ? (
+               <SelectServerContent>
                   <TopHeader>
                      <TopHeaderTitle>Dashboard</TopHeaderTitle>
                      <ProfileWrapper id="profile">
@@ -127,9 +129,54 @@ const DashboardLayout = ({ active, children }: Props) => {
                         )}
                      </ProfileWrapper>
                   </TopHeader>
-                  <div className="container">{children}</div>
-               </Main>
-            </Content>
+                  <ServerList>
+                     <ServerItem>
+                        <p>FlyFF Universe</p>
+                     </ServerItem>
+                     <ServerItem>
+                        <p>FlyFF Nebula</p>
+                     </ServerItem>
+                     <ServerItem>
+                        <p>Create a Server +</p>
+                     </ServerItem>
+                  </ServerList>
+               </SelectServerContent>
+            ) : (
+               <Content>
+                  <SideNav active={active} />
+                  <Main>
+                     <TopHeader>
+                        <TopHeaderTitle>Dashboard</TopHeaderTitle>
+                        <ProfileWrapper id="profile">
+                           <ProfileContent id="profile">
+                              <ProfileName id="profile">
+                                 {user?.name || 'Guest'}
+                              </ProfileName>
+                              <ProfileInitial id="profile">
+                                 {user?.name
+                                    ? user.name.charAt(0).toUpperCase()
+                                    : 'G'}
+                              </ProfileInitial>
+                           </ProfileContent>
+
+                           {outsideClickId === 'profile' && (
+                              <Dropdown
+                                 active={outsideClickId === `profile`}
+                                 actions={dropdownData}
+                                 width="150px"
+                                 textdecoration="normal"
+                                 top="40px"
+                                 right="0"
+                                 // selected={selected}
+                                 // selected={isValidNormalTextValue(value) ? value : ''}
+                              />
+                           )}
+                        </ProfileWrapper>
+                     </TopHeader>
+                     <div className="container">{children}</div>
+                  </Main>
+               </Content>
+            )}
          </Wrapper>
       </div>
    );
@@ -192,5 +239,15 @@ const ProfileInitial = styled.div`
    font-size: 15px;
    font-weight: 600;
 `;
+
+// SelectServerContent
+// ServerList
+// ServerItem
+
+const SelectServerContent = styled.div``;
+
+const ServerList = styled.div``;
+
+const ServerItem = styled.div``;
 
 export default DashboardLayout;
