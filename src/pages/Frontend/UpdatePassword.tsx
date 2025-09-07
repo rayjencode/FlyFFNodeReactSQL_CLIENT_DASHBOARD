@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ButtonSignInSignup from '@/components/Frontend/ButtonSignup';
 import LoginInput from '@/components/Frontend/LoginInput';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { updatePassword, verifyResetPasswordToken } from '@/api/auth';
@@ -45,6 +45,28 @@ const UpdatePassword = ({ handleForm }: Props) => {
    // Local UI state
    const [success, setSuccess] = useState(false);
    const navigate = useNavigate();
+
+   const { mutate, isPending } = useMutation({
+      mutationFn: updatePassword,
+      onSuccess: (response) => {
+         setIsLoading(false);
+         // console.log(`----response`, response);
+
+         if (response.data.statusCode === 201) {
+            toast.success(response.data.message);
+            setSuccess(true);
+         }
+      },
+      onError: (err: ApiError) => {
+         const errorMessage =
+            err.response?.data?.err ||
+            err.response?.data?.message ||
+            'Forgot Password failed. Please try again.';
+         toast.error(errorMessage);
+         setIsLoading(false);
+      },
+   });
+
    // If missing params, bounce home
    useEffect(() => {
       if (!token || !userId) {
@@ -91,30 +113,36 @@ const UpdatePassword = ({ handleForm }: Props) => {
       const userId: string =
          new URLSearchParams(window.location.search).get('userId') || '';
 
-      try {
-         const { status } = await updatePassword({
-            token,
-            userId,
-            password: values.newPassword,
-         });
+      mutate({
+         token,
+         userId,
+         password: values.newPassword,
+      });
 
-         console.log(`status`, status);
+      // try {
+      //    const { status } = await updatePassword({
+      //       token,
+      //       userId,
+      //       password: values.newPassword,
+      //    });
 
-         if (status === 200) {
-            setSuccess(true);
-            toast.success('Password updated successfully');
-         }
-      } catch (err: unknown) {
-         const error = err as ApiError;
-         const errorMessage =
-            error.response?.data?.errors?.[0] ||
-            error.response?.data?.message ||
-            'Failed to update password';
-         toast.error(errorMessage);
-         // setError(errorMessage);
-      } finally {
-         setIsLoading(false);
-      }
+      //    console.log(`status`, status);
+
+      //    if (status === 200) {
+      //       setSuccess(true);
+      //       toast.success('Password updated successfully');
+      //    }
+      // } catch (err: unknown) {
+      //    const error = err as ApiError;
+      //    const errorMessage =
+      //       error.response?.data?.errors?.[0] ||
+      //       error.response?.data?.message ||
+      //       'Failed to update password';
+      //    toast.error(errorMessage);
+      //    // setError(errorMessage);
+      // } finally {
+      //    setIsLoading(false);
+      // }
    };
 
    return (

@@ -33,6 +33,7 @@ interface ApiError {
 const Login = ({ handleForm }: Props) => {
    const navigate = useNavigate();
    const location = useLocation();
+   const [isLoading, setIsLoading] = useState(false);
    const { setAuth } = useAuthStore();
    const [values, setValues] = useState({
       email:
@@ -44,7 +45,7 @@ const Login = ({ handleForm }: Props) => {
    const { mutate, isPending } = useMutation({
       mutationFn: signIn,
       onSuccess: (response) => {
-         const { token, user } = response.data;
+         const { token, user } = response.data.data;
 
          // console.log(`----> response`, response);
 
@@ -58,6 +59,7 @@ const Login = ({ handleForm }: Props) => {
             typeof user.name === 'string' &&
             typeof user.email === 'string'
          ) {
+            setIsLoading(false);
             setAuth(token, user); // ✅ Safe
 
             const from = location.state?.from || '/admin';
@@ -79,6 +81,7 @@ const Login = ({ handleForm }: Props) => {
             'Login failed. Please try again.';
          setError(errorMessage);
          toast.error(errorMessage);
+         setIsLoading(false);
       },
    });
 
@@ -93,6 +96,7 @@ const Login = ({ handleForm }: Props) => {
       }
 
       setError('');
+      setIsLoading(true);
       mutate({ email, password });
    };
 

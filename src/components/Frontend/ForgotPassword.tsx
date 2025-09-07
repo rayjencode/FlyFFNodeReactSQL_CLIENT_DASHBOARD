@@ -41,6 +41,27 @@ const ForgotPassword = ({ handleForm }: Props) => {
    const [isLoading, setIsLoading] = useState(false);
    const [error, setError] = useState('');
 
+   const { mutate, isPending } = useMutation({
+      mutationFn: forgetPassword,
+      onSuccess: (response) => {
+         setIsLoading(false);
+         // console.log(`----response`, response);
+
+         if (response.data.statusCode === 201) {
+            toast.success(response.data.message);
+         }
+      },
+      onError: (err: ApiError) => {
+         const errorMessage =
+            err.response?.data?.err ||
+            err.response?.data?.message ||
+            'Forgot Password failed. Please try again.';
+         setError(errorMessage);
+         toast.error(errorMessage);
+         setIsLoading(false);
+      },
+   });
+
    const handleSubmit = async () => {
       if (!values.email) {
          setError('Email is required');
@@ -48,17 +69,20 @@ const ForgotPassword = ({ handleForm }: Props) => {
       }
 
       setIsLoading(true);
-      const { status, data } = await forgetPassword({ email: values.email });
-      console.log(`------ status`, status, data);
-      console.log(`------ data`, data);
 
-      if (status === 200) {
-         toast.success('Password reset email sent');
-      } else {
-         toast.error('Failed to send password reset email');
-      }
+      mutate({ email: values.email });
 
-      setIsLoading(false);
+      // const { status, data } = await forgetPassword({ email: values.email });
+      // console.log(`------ status`, status, data);
+      // console.log(`------ data`, data);
+
+      // if (status === 200) {
+      //    toast.success('Password reset email sent');
+      // } else {
+      //    toast.error('Failed to send password reset email');
+      // }
+
+      // setIsLoading(false);
    };
 
    return (

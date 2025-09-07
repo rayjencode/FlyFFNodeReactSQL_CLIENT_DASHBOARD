@@ -50,13 +50,15 @@ const SignUp = ({ handleForm }: Props) => {
    const { mutate, isPending } = useMutation({
       mutationFn: signUp,
       onSuccess: (response) => {
-         if (response.status === 201) {
+         // console.log(`----response`, response);
+         if (response.data.statusCode === 201) {
             // const { token, user } = response.data; // Adjust based on your API response
             // setAuth(token, user || { email: values.email }); // Store token and user
             // const from = location.state?.from || '/admin';
             // navigate(from, { replace: true });
 
-            toast.success('OTP sent to your email');
+            // toast.success('OTP sent to your email');
+            toast.success(response.data.message);
             handleForm('verify-email');
             const randomString = Array.from(
                window.crypto.getRandomValues(new Uint8Array(24))
@@ -64,18 +66,20 @@ const SignUp = ({ handleForm }: Props) => {
                .map((b) => b.toString(16).padStart(2, '0'))
                .join('');
             navigate(
-               `/?x-flyffcms=${randomString}&&id=${response.data.user.id}`
+               `/?x-flyffcms=${randomString}&&id=${response.data.data.user.id}`
             );
+            setIsLoading(false);
          }
       },
       onError: (err: ApiError) => {
+         // console.log(`----ApiError`, err);
          const errorMessage =
             err.response?.data?.errors?.[0] ||
             err.response?.data?.message ||
             'Signup failed. Please try again.';
          setError(errorMessage);
          toast.error(errorMessage);
-
+         setIsLoading(false);
          // console.log(`error--`, err);
       },
    });

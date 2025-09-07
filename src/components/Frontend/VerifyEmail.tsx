@@ -49,12 +49,13 @@ const VerifyEmail = ({ handleForm }: Props) => {
       onSuccess: (response) => {
          // console.log(`----response`, response);
 
-         if (response.status === 200) {
-            console.log(`status 200 response---->`, response);
-            const { token, user } = response.data; // Adjust based on your API response
-            setAuth(token, user || { email: response.data.user.email }); // Store token and user
+         if (response.data.statusCode === 201) {
+            // console.log(`status 200 response---->`, response);
+            const { token, user } = response.data.data; // Adjust based on your API response
+            setAuth(token, user || { email: response.data.data.user.email }); // Store token and user
             const from = location.state?.from || '/admin';
             navigate(from, { replace: true });
+            setIsLoading(false);
          }
       },
       onError: (err: ApiError) => {
@@ -64,6 +65,7 @@ const VerifyEmail = ({ handleForm }: Props) => {
             'Verify email failed. Please try again.';
          setError(errorMessage);
          toast.error(errorMessage);
+         setIsLoading(false);
       },
    });
 

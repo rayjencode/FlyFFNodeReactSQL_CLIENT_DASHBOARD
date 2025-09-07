@@ -53,6 +53,8 @@ export const signUp = async (data: TableUser) => {
       '/auth-admin/create-owner-account',
       data
    );
+
+   // console.log(`response--`, response);
    return {
       status: response.status,
       data: response.data,
