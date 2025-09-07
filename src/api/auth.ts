@@ -22,7 +22,7 @@ export const verifyResetPasswordToken = async (data: {
    token: string;
    userId: string;
 }) => {
-   console.log(data.token);
+   // console.log(data.token);
    const response = await apiClient.post(
       '/auth-admin/verify-pass-reset-token',
       data

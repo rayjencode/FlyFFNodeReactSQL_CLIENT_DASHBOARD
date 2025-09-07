@@ -261,7 +261,14 @@ const UpdatePassword = ({ handleForm }: Props) => {
 
                         <NewHereWrapper>
                            <NewHereLabel>Remember your password?</NewHereLabel>
-                           <NewHereLink onClick={() => handleForm('signin')}>
+                           <NewHereLink
+                              onClick={() => {
+                                 // console.log(`---- update password to signin`);
+                                 // handleForm('signin');
+
+                                 navigate('/');
+                              }}
+                           >
                               Back to Login
                            </NewHereLink>
                         </NewHereWrapper>

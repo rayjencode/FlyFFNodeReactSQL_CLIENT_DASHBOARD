@@ -5,24 +5,22 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface Props {
-   sample: string;
+   data: {
+      _id: string;
+      servername: string;
+      domain: string;
+      logo: string;
+   }[];
+   onSelect: (id: string) => void;
 }
 
-const ServersCard = () => {
-   const [websites, setWebsites] = React.useState([
-      {
-         name: 'FlyFF Shade (Low Rate)',
-         url: 'https://flyffshade.myflyff.com',
-      },
-      {
-         name: 'FlyFF Ultimate',
-         url: 'https://flyffultimate.com',
-      },
-      {
-         name: 'Battle FlyFF',
-         url: 'https://battleflyff.com',
-      },
-   ]);
+const ServersCard = ({ data, onSelect }: Props) => {
+   // console.log(data);
+
+   const handleSelect = (id: string) => {
+      // console.log(id);
+      onSelect(id);
+   };
 
    return (
       <Wrapper>
@@ -48,14 +46,14 @@ const ServersCard = () => {
             </TopAction>
          </Top>
          <ServerList>
-            {websites.map((website, index) => (
+            {data.map((item, index) => (
                <ServerItem key={index}>
                   <ServerItemContentMain>
                      <ServerLogoWrapper>
-                        <ServerLogo src="/logo.png" />
+                        <ServerLogo src={item.logo} />
                      </ServerLogoWrapper>
                      <ServerItemContent>
-                        <ServerItemTitle>{website.name}</ServerItemTitle>
+                        <ServerItemTitle>{item.servername}</ServerItemTitle>
                         <ServerDomainWrapper>
                            <ServerDomainIcon>
                               <IconsLib
@@ -65,16 +63,16 @@ const ServersCard = () => {
                               />
                            </ServerDomainIcon>
                            <ServerDomain
-                              href={website.url}
+                              href={item.domain}
                               target="_blank"
                               rel="noreferrer"
                            >
-                              {website.url}
+                              {item.domain}
                            </ServerDomain>
                         </ServerDomainWrapper>
                      </ServerItemContent>
                   </ServerItemContentMain>
-                  <ServerItemAction>
+                  <ServerItemAction onClick={() => handleSelect(item._id)}>
                      <Btn
                         title="Edit settings"
                         type="normal"

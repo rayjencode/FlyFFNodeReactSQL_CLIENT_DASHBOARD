@@ -137,7 +137,12 @@ const ForgotPassword = ({ handleForm }: Props) => {
 
                   <NewHereWrapper>
                      <NewHereLabel>Remember your password?</NewHereLabel>
-                     <NewHereLink onClick={() => handleForm('signin')}>
+                     <NewHereLink
+                        onClick={() => {
+                           console.log(`---- forgot password to signin`);
+                           handleForm('signin');
+                        }}
+                     >
                         Back to Login
                      </NewHereLink>
                   </NewHereWrapper>

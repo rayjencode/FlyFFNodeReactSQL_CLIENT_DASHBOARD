@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VerifyEmail from '@/components/Frontend/VerifyEmail';
 import ForgotPassword from '@/components/Frontend/ForgotPassword';
+import UpdatePassword from '@/pages/Frontend/UpdatePassword';
 // import ForgotPassword from '@/components/Frontend/ForgotPassword';
 // import SignIn from '@/components/Frontend/SignIn';
 const Layout = () => {
@@ -22,6 +23,7 @@ const Layout = () => {
    //   if (error) return <div>Error occurred</div>;
 
    const handleForm = (form: string) => {
+      // console.log(`form------`, form);
       setForm(form);
    };
 

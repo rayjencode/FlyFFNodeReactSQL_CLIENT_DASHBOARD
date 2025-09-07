@@ -26,7 +26,9 @@ import useSaveChangesStore from '@/store/useSaveChangesStore';
 import PromptWrapper from '@/components/Admin/Templates/PromptWrapper';
 import SaveChangesModal from '@/components/Admin/SaveChangesModal';
 import ServersCard from '@/components/Admin/ServersCard';
+import { getWebServers } from '@/api/servers';
 // import ServersCard from '@/components/Admin/ServersCard';
+
 type Props = {
    active: string;
    children: React.ReactNode;
@@ -36,6 +38,9 @@ const DashboardLayout = ({ active, children }: Props) => {
    const { outsideClickId } = useUIStore();
    const { user } = useAuthStore();
    const navigate = useNavigate();
+   const [servers, setServers] = useState<
+      { _id: string; servername: string; domain: string; logo: string }[]
+   >([]);
 
    const {
       show,
@@ -83,6 +88,26 @@ const DashboardLayout = ({ active, children }: Props) => {
          document.body.style.overflow = 'auto';
       };
    }, [show]);
+
+   useEffect(() => {
+      const fetchServers = async () => {
+         try {
+            const serverData = await getWebServers();
+            setServers(serverData.data); // Assuming the API returns an array of servers
+         } catch (error) {
+            console.error('Failed to fetch servers:', error);
+         }
+      };
+
+      fetchServers();
+   }, []);
+
+   const handleSelectServer = (serverId: string) => {
+      // console.log(`xxxxx`, serverId);
+      setServer(serverId);
+   };
+
+   console.log(server);
 
    // const xxxx = JSON.parse(localStorage.getItem('x-user') || '{}');
 
@@ -132,7 +157,14 @@ const DashboardLayout = ({ active, children }: Props) => {
                      </ProfileWrapper>
                   </TopHeader>
                   <SelectServerMain>
-                     <ServersCard />
+                     {servers.length === 0 ? (
+                        <p>Loading...</p>
+                     ) : (
+                        <ServersCard
+                           data={servers}
+                           onSelect={handleSelectServer}
+                        />
+                     )}
                   </SelectServerMain>
                </SelectServerContent>
             ) : (
